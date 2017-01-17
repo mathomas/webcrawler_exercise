@@ -9,7 +9,7 @@ Assumptions
 There was no definition of "site map", so I took it literally for simplicity's sake :-).
 I just crawl all the pages from the first page out, and collect the visited pages' URIs
 in a Map, with related Set of the page's linked resourceReference URIs as the values.  I then print
-out the Map in a reasonable way.  Would be interesting to plug in different output formats
+out the Map in a simple/reasonable way.  Would be interesting to plug in different output formats
 for the display of the map.  A dotfile would be very interesting, so the map could be graphed.
 I considered doing it, but decided to hold off due to time.
 

@@ -43,11 +43,13 @@ class PageScraper {
             // type is something we can actually scrape.  If the requirements said to
             // report invalid or dead links and/or otherwise un-crawl-able files, then
             // something else would be better, for sure.
+            // Funny thing is one of the reasons for the IOException throw is a non-supported
+            // MIME type, so Jsoup is doing the check for us ;-).
             return emptySet();
         }
 
-        Elements anchors = doc.select("a");
-        Set<ResourceReference> anchorHrefs = anchors.stream()
+        Elements links = doc.select("a");
+        Set<ResourceReference> anchorHrefs = links.stream()
                 .map(it -> ResourceReference.page(it.attr("href")))
                 .collect(Collectors.toSet());
 

@@ -28,7 +28,7 @@ class WebCrawler {
             // We only crawl a subset of reportable references:  you report an image, but you don't crawl it.
             reportableResourceReferences.stream()
                     .filter(resource -> isCrawlable(resource, baseUrl))
-//                    .parallel()   // the magic "gofast" bit, but not threadsafe in this implementation -- still cool.
+//                    .parallel() // the magic "go-fast" bit, but not threadsafe in this implementation -- still cool.
                     .forEach(resource -> {
                         crawl(siteMap, baseUrl, resource.getUri());
                     });

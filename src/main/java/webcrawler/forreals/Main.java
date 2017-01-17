@@ -11,12 +11,13 @@ public class Main {
         Map<String, Set<String>> siteMap = new LinkedHashMap<>();
         WebCrawler crawler = new WebCrawler();
         String baseUrl = "http://www.samoht.com";
+
         crawler.crawl(siteMap, baseUrl, "/");
 
         print(siteMap, baseUrl);
 
         long stop = System.currentTimeMillis();
-        System.out.println("Runtime: " + (stop - start) / 1000l + "s");
+        System.out.println("Runtime: " + (stop - start) / 1000L + "s");
     }
 
     private static void print(Map<String, Set<String>> siteMap, String baseUrl) {

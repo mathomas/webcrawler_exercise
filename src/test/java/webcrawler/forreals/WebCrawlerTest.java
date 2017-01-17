@@ -165,7 +165,7 @@ public class WebCrawlerTest {
     }
 
     @Test
-    public void crawlDontFollowOutsideLinks() {
+    public void crawlDontFollowForeignLinks() {
         when(pageScraper.getLinks("baseUrl/startingUri"))
                 .thenReturn(singleton(page("http://someotherdomain.com")));
 
