@@ -8,16 +8,21 @@ The output should be a simple site map, showing links to other pages under the s
 
 Running
 -------
-My example is built with Maven, so the easiest way to run it is under Maven.  Install Maven (sorry), and once
-installed, the following:
+My example is built with Maven, so the easiest way to run it is under Maven.  I'm using the "Maven Wrapper"
+approach, so in theory the below should work just fine even if you don't have Maven (yet).
 
- - builds the crawler:
- ```mvn compile``` or ```mvn test```
- - runs the crawler:
- ```mvn exec:java -Dexec.args="<your URL here>"```
+ Build/test the crawler project:
+ 
+ ```./mvnw test```
+ 
+ Run the crawler:
+ 
+ ```./mvnw compile exec:java -Dexec.args="<your URL here>"```
+ 
+(note that the 'compile' is only needed if you haven't already run a compile, test, or install)
 
-Yeah, ugly Maven command-line syntax.  If you leave out the args when running, the crawler defaults
-to crawling my website.
+Yeah, ugly Maven command-line syntax sorry.  If you leave out the args when running, the crawler 
+defaults to crawling my website.
 
 
 Assumptions
