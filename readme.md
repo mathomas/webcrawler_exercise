@@ -21,18 +21,25 @@ approach, so in theory the below should work just fine even if you don't have Ma
  
 (note that the 'compile' is only needed if you haven't already run a compile, test, or install)
 
-Yeah, ugly Maven command-line syntax sorry.  If you leave out the args when running, the crawler 
-defaults to crawling my website.
+The first time you do the above, the internet will be downloaded.  Such is the nature of modern
+software development.
+
+And yes, the ugly Maven command-line syntax -- sorry.  Anyway, if you leave out the args when running, 
+the crawler defaults to crawling my website.
 
 
 Assumptions
 -----------
 There was no definition of "site map", so I took it literally for simplicity's sake :-).
 I just crawl all the pages from the first page out, and collect the visited pages' URIs
-in a Map, with related Set of the page's linked resourceReference URIs as the values.  I then print
+in a Map, with related Set of the page's linked resource URIs as the values.  I then print
 out the Map in a simple/reasonable way.  Would be interesting to plug in different output formats
-for the display of the map.  A dotfile would be very interesting, so the map could be graphed.
-I considered doing it, but decided to hold off due to time.
+for the display of the map.  A dotfile would be _very_ interesting, so the map could be graphed.
+I considered doing it, but decided to hold off due to time, and due to the fact that one would
+have to have the appropriate tools installed to do anything with it.
+
+There was no specific requirement for handling HTTP errors, etc.  So, I took the easy way out
+and quietly returned no resources for any oddball HTTP or content case.  Seemed OK at the time.
 
 Approach
 --------
