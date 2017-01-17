@@ -10,8 +10,9 @@ Running
 -------
 The exercise is built using Java version 1.8.  I use Java 1.8 features, so you _gotta_ have 1.8.
 
-The exercise is built with Maven, so the easiest way to run it is under Maven.  I'm using the "Maven Wrapper"
-approach, so in theory the below should work just fine even if you don't have Maven (yet).
+I used Maven for the build tool.  I'm using the "Maven Wrapper" approach, so in theory the below should 
+work just fine even if you don't have Maven installed.  I tested this approach only on Macs, so fingers 
+crossed that it will work on other platforms.
 
  Build/test the crawler project:
  
