@@ -8,7 +8,9 @@ The output should be a simple site map, showing links to other pages under the s
 
 Running
 -------
-My example is built with Maven, so the easiest way to run it is under Maven.  I'm using the "Maven Wrapper"
+The exercise is built using Java version 1.8.  I use Java 1.8 features, so you _gotta_ have 1.8.
+
+The exercise is built with Maven, so the easiest way to run it is under Maven.  I'm using the "Maven Wrapper"
 approach, so in theory the below should work just fine even if you don't have Maven (yet).
 
  Build/test the crawler project:
