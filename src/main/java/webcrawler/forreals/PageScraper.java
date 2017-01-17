@@ -15,12 +15,14 @@ import static java.util.Collections.emptySet;
 /**
  * Simple wrapper around Jsoup library to minimize the amount of code that
  * has to be integration tested.  Could have introduced PowerMock or the like
- * in order to mock out static method calls, but decided to just take this
- * path for this exercise, and have an integration test.
+ * in order to mock out static method calls found here, but decided to just take the
+ * integration test path for this exercise.
  * <p>
  * Realistically, at some point you really do have to see how the networking library
- * you might be using actually works, and ensure it continues to.  The downside is
- * having to point to some stable site.
+ * you might be using actually works, and ensure it continues to, so such a test is
+ * not totally crazy. The downside is having to point to some stable site.  Would
+ * be nice to have a combination of this integration test and a unit test with
+ * appropriate mocking.
  */
 class PageScraper {
 
@@ -32,7 +34,7 @@ class PageScraper {
      * @param pageUrl The fully-qualified url of the page to scrape.
      * @return A set of URIs representing the linked resources.
      */
-    Set<String> getLinks(String pageUrl) {
+    Set<ResourceReference> getLinks(String pageUrl) {
         Document doc;
         try {
             doc = Jsoup.parse(new URL(pageUrl), RETRIEVE_TIMEOUT);
@@ -45,16 +47,16 @@ class PageScraper {
         }
 
         Elements anchors = doc.select("a");
-        Set<String> anchorHrefs = anchors.stream()
-                .map(it -> it.attr("href"))
+        Set<ResourceReference> anchorHrefs = anchors.stream()
+                .map(it -> ResourceReference.page(it.attr("href")))
                 .collect(Collectors.toSet());
 
         Elements imgs = doc.select("img");
-        Set<String> imgSrcs = imgs.stream()
-                .map(it -> it.attr("src"))
+        Set<ResourceReference> imgSrcs = imgs.stream()
+                .map(it -> ResourceReference.image(it.attr("src")))
                 .collect(Collectors.toSet());
 
-        Set<String> all = new HashSet<>();
+        Set<ResourceReference> all = new HashSet<>();
         all.addAll(anchorHrefs);
         all.addAll(imgSrcs);
         return all;
