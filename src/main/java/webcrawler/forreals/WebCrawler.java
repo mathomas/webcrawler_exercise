@@ -18,33 +18,35 @@ class WebCrawler {
         if (!siteMap.containsKey(normalizedPageUri)) {
             System.out.println("Crawling " + normalizedPageUri);
 
-            Set<String> linkUris = getInterestingLinkUris(baseUrl, normalizedPageUri);
+            Set<ResourceReference> reportableResourceReferences = getReportableResourceReferences(baseUrl, normalizedPageUri);
 
-            siteMap.put(normalizedPageUri, linkUris);
+            siteMap.put(normalizedPageUri,
+                    reportableResourceReferences.stream()
+                            .map(ResourceReference::getUri)
+                            .collect(toSet()));
 
-            linkUris.stream()
-                    .filter(link -> isCrawlable(link, baseUrl))
-                    .parallel()   // the magic "gofast" bit, but not threadsafe in this implementation -- still cool.
-                    .forEach(link -> {
-                        crawl(siteMap, baseUrl, link);
+            // We only crawl a subset of reportable references:  you report an image, but you don't crawl it.
+            reportableResourceReferences.stream()
+                    .filter(resource -> isCrawlable(resource, baseUrl))
+//                    .parallel()   // the magic "gofast" bit, but not threadsafe in this implementation -- still cool.
+                    .forEach(resource -> {
+                        crawl(siteMap, baseUrl, resource.getUri());
                     });
         }
     }
 
     // Lets not even bother with some classes of link.  I've probably missed some.  Easy to add.
-    private Set<String> getInterestingLinkUris(String baseUrl, String normalizedPageUri) {
+    private Set<ResourceReference> getReportableResourceReferences(String baseUrl, String normalizedPageUri) {
         return pageScraper.getLinks(baseUrl + normalizedPageUri)
                 .stream()
-                .filter(link -> !link.isEmpty())
-                .filter(link -> !link.startsWith("mailto:"))
-                .filter(link -> !link.startsWith("tel:"))
-                .filter(link -> !link.startsWith("#"))
+                .filter(ResourceReference::isReportable)
                 .collect(toSet());
     }
 
     // Fairly cheesy way to avoid following undesirable links.
-    private boolean isCrawlable(String link, String baseUrl) {
-        return link.startsWith(baseUrl) || link.startsWith("/");
+    private boolean isCrawlable(ResourceReference resourceReference, String baseUrl) {
+        return resourceReference.isPage() &&
+                resourceReference.isLocal(baseUrl);
     }
 
     void setPageScraper(PageScraper pageScraper) {

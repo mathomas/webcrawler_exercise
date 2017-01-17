@@ -11,8 +11,11 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
+import static java.util.stream.Collectors.toSet;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+import static webcrawler.forreals.ResourceReference.image;
+import static webcrawler.forreals.ResourceReference.page;
 
 public class WebCrawlerTest {
 
@@ -42,7 +45,7 @@ public class WebCrawlerTest {
     @Test
     public void crawlTopPage() {
         when(pageScraper.getLinks("baseUrl/startingUri"))
-                .thenReturn(singleton("/subUri"));
+                .thenReturn(singleton(page("/subUri")));
         when(pageScraper.getLinks("baseUrl/subUri"))
                 .thenReturn(emptySet());
 
@@ -65,9 +68,9 @@ public class WebCrawlerTest {
     }
 
     @Test
-    public void filterOutMailtoLinks() {
+    public void dontReportMailtoLinks() {
         when(pageScraper.getLinks("baseUrl/startingUri"))
-                .thenReturn(singleton("mailto:somewhere"));
+                .thenReturn(singleton(page("mailto:somewhere")));
 
         crawler.crawl(siteMap, "baseUrl", "/startingUri");
 
@@ -76,9 +79,9 @@ public class WebCrawlerTest {
     }
 
     @Test
-    public void filterOutEmptyLinks() {
+    public void dontReportEmptyLinks() {
         when(pageScraper.getLinks("baseUrl/startingUri"))
-                .thenReturn(singleton(""));
+                .thenReturn(singleton(page("")));
 
         crawler.crawl(siteMap, "baseUrl", "/startingUri");
 
@@ -87,9 +90,9 @@ public class WebCrawlerTest {
     }
 
     @Test
-    public void filterOutTelLinks() {
+    public void dontReportTelLinks() {
         when(pageScraper.getLinks("baseUrl/startingUri"))
-                .thenReturn(singleton("tel:notgonnadoit"));
+                .thenReturn(singleton(page("tel:notgonnadoit")));
 
         crawler.crawl(siteMap, "baseUrl", "/startingUri");
 
@@ -98,24 +101,36 @@ public class WebCrawlerTest {
     }
 
     @Test
-    public void filterOutAnchorLinks() {
+    public void dontReportAnchorLinks() {
         when(pageScraper.getLinks("baseUrl/startingUri"))
-                .thenReturn(singleton("#nope"));
+                .thenReturn(singleton(page("#nope")));
 
         crawler.crawl(siteMap, "baseUrl", "/startingUri");
 
         assertEquals(1, siteMap.size());
         assertEquals(emptySet(), siteMap.get("/startingUri"));
+    }
+
+    @Test
+    public void dontCrawlImageLinks() {
+        when(pageScraper.getLinks("baseUrl/startingUri"))
+                .thenReturn(singleton(image("/dontcrawlme.jpg")));
+
+        crawler.crawl(siteMap, "baseUrl", "/startingUri");
+
+        verify(pageScraper, times(0)).getLinks("baseUrl/dontcrawlme.jpg");
+        assertEquals(1, siteMap.size());
+        assertEquals(singleton("/dontcrawlme.jpg"), siteMap.get("/startingUri"));
     }
 
     @Test
     public void crawlRecursive() {
         when(pageScraper.getLinks("baseUrl/startingUri"))
-                .thenReturn(singleton("/subUri"));
+                .thenReturn(singleton(page("/subUri")));
         when(pageScraper.getLinks("baseUrl/subUri"))
-                .thenReturn(singleton("/subSubUri"));
+                .thenReturn(singleton(page("/subSubUri")));
         when(pageScraper.getLinks("baseUrl/subSubUri"))
-                .thenReturn(singleton("/subSubSubUri"));
+                .thenReturn(singleton(page("/subSubSubUri")));
         when(pageScraper.getLinks("baseUrl/subSubSubUri"))
                 .thenReturn(emptySet());
 
@@ -131,9 +146,9 @@ public class WebCrawlerTest {
     @Test
     public void crawlRecursiveBacklinkTerminatesProperly() {
         when(pageScraper.getLinks("baseUrl/startingUri"))
-                .thenReturn(singleton("/subUri"));
+                .thenReturn(singleton(page("/subUri")));
 
-        HashSet<String> subUriLinks = new HashSet<>(asList("/subSubUri", "/startingUri"));
+        HashSet<ResourceReference> subUriLinks = new HashSet<>(asList(page("/subSubUri"), page("/startingUri")));
         when(pageScraper.getLinks("baseUrl/subUri"))
                 .thenReturn(subUriLinks);
 
@@ -144,14 +159,15 @@ public class WebCrawlerTest {
 
         assertEquals(3, siteMap.size());
         assertEquals(singleton("/subUri"), siteMap.get("/startingUri"));
-        assertEquals(subUriLinks, siteMap.get("/subUri"));
+        assertEquals(subUriLinks.stream().map(ResourceReference::getUri).collect(toSet()),
+                siteMap.get("/subUri"));
         assertEquals(emptySet(), siteMap.get("/subSubUri"));
     }
 
     @Test
     public void crawlDontFollowOutsideLinks() {
         when(pageScraper.getLinks("baseUrl/startingUri"))
-                .thenReturn(singleton("http://someotherdomain.com"));
+                .thenReturn(singleton(page("http://someotherdomain.com")));
 
         crawler.crawl(siteMap, "baseUrl", "/startingUri");
 

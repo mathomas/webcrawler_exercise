@@ -10,7 +10,7 @@ public class Main {
 
         Map<String, Set<String>> siteMap = new LinkedHashMap<>();
         WebCrawler crawler = new WebCrawler();
-        String baseUrl = "http://www.bluelanternstore.com";
+        String baseUrl = "http://www.samoht.com";
         crawler.crawl(siteMap, baseUrl, "/");
 
         print(siteMap, baseUrl);

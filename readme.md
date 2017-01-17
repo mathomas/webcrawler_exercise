@@ -8,7 +8,7 @@ Assumptions
 -----------
 There was no definition of "site map", so I took it literally for simplicity's sake :-).
 I just crawl all the pages from the first page out, and collect the visited pages' URIs
-in a Map, with related Set of the page's linked resource URIs as the values.  I then print
+in a Map, with related Set of the page's linked resourceReference URIs as the values.  I then print
 out the Map in a reasonable way.  Would be interesting to plug in different output formats
 for the display of the map.  A dotfile would be very interesting, so the map could be graphed.
 I considered doing it, but decided to hold off due to time.
@@ -27,5 +27,5 @@ Tuning
 Doing scraping serially is pretty slow.  So I added an optional parallel() call in the 
 code that recurses over the linked sub-pages.  This makes the crawler go much faster 
 (nearly 50% improvement in my testing). However, I did nothing to make it threadsafe 
-(the site Map that is being built would be the shared resource in this case).  It's 
+(the site Map that is being built would be the shared resourceReference in this case).  It's 
 probably not the end of the world for this example, but definitely not perfection. 

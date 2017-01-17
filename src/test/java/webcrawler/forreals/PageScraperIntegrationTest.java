@@ -7,6 +7,7 @@ import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static webcrawler.forreals.ResourceReference.*;
 
 public class PageScraperIntegrationTest {
 
@@ -19,26 +20,26 @@ public class PageScraperIntegrationTest {
 
     @Test
     public void getLinks() throws Exception {
-        Set<String> linkHrefs = scraper.getLinks("http://www.samoht.com");
+        Set<ResourceReference> linkHrefs = scraper.getLinks("http://www.samoht.com");
         assertEquals(12, linkHrefs.size());
-        assertTrue(linkHrefs.contains("/resume.html"));
+        assertTrue(linkHrefs.contains(page("/resume.html")));
     }
 
     @Test
     public void getLinks404() throws Exception {
-        Set<String> linkHrefs = scraper.getLinks("http://www.samoht.com/notthere.html");
+        Set<ResourceReference> linkHrefs = scraper.getLinks("http://www.samoht.com/notthere.html");
         assertTrue(linkHrefs.isEmpty());
     }
 
     @Test
     public void getLinksNoFileUrls() throws Exception {
-        Set<String> linkHrefs = scraper.getLinks("file://foo.bar.baz/");
+        Set<ResourceReference> linkHrefs = scraper.getLinks("file://foo.bar.baz/");
         assertTrue(linkHrefs.isEmpty());
     }
 
     @Test
     public void getLinksRidiculousUrl() throws Exception {
-        Set<String> linkHrefs = scraper.getLinks("this will never work");
+        Set<ResourceReference> linkHrefs = scraper.getLinks("this will never work");
         assertTrue(linkHrefs.isEmpty());
     }
 }
