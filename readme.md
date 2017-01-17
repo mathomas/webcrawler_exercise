@@ -6,6 +6,20 @@ My basic implementation of the "web crawler" exercise.  Here are the specs I rec
 The crawler should be limited to one domain. Given a starting URL – say wiprodigital.com - it should visit all pages within the domain, but not follow the links to external sites such as Google or Twitter.
 The output should be a simple site map, showing links to other pages under the same domain, links to static content such as images, and to external URLs.
 
+Running
+-------
+My example is built with Maven, so the easiest way to run it is under Maven.  Install Maven (sorry), and once
+installed, the following:
+
+ - builds the crawler:
+ ```mvn compile``` or ```mvn test```
+ - runs the crawler:
+ ```mvn exec:java -Dexec.args="<your URL here>"```
+
+Yeah, ugly Maven command-line syntax.  If you leave out the args when running, the crawler defaults
+to crawling my website.
+
+
 Assumptions
 -----------
 There was no definition of "site map", so I took it literally for simplicity's sake :-).
